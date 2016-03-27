@@ -5,4 +5,4 @@ A vBulletin version 5 to NodeBB exporter based on nodebb-plugin-import-vbulletin
 
 ### Credits
 
-The whole project is based on Akhoury work with the vbulletin plugin. (https://github.com/akhoury/nodebb-plugin-import-vbulletin)
+The whole project is based on Akhoury's work with the vbulletin plugin. (https://github.com/akhoury/nodebb-plugin-import-vbulletin)
