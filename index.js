@@ -542,7 +542,8 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'node.title as _name, '
 			+ prefix + 'node.description as _description, '
 			+ prefix + 'node.displayorder as _order '
-			+ 'FROM ' + prefix + 'node ' // filter added later
+			+ 'FROM ' + prefix + 'node '
+			+ 'where node.contenttypeid=29 '
 			+ (start >= 0 && limit >= 0 ? ' LIMIT ' + start + ',' + limit : '');
 
 		Exporter.query(query,
