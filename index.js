@@ -655,7 +655,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'node.parentid as _cid, '
 			+ prefix + 'node.public_preview as _visible, '
 			+ prefix + 'node.title as _title, '
-			+ prefix + 'node.title as _content, '
+			+ prefix + 'text.rawtext as _content, '
 			+ prefix + 'node.hasphoto as _attached, '
 			+ prefix + 'node.authorname as _guest, '
 			+ prefix + 'node.ipaddress as _ip, '
@@ -665,6 +665,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'node.sticky as _pinned '
 			+ ' FROM ' + prefix + 'thread_post '
 			+ ' JOIN ' + prefix + 'node ON ' + prefix + 'thread_post.nodeid=' + prefix + 'node.nodeid '
+			+ ' JOIN ' + prefix + 'text ON ' + prefix + 'text.nodeid=' + prefix + 'node.nodeid '
 			+ (timemachine.topics.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.topics.from : ' ')
 			+ (timemachine.topics.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.topics.to : ' ')
 
