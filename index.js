@@ -714,8 +714,8 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 
 		var query = 'SELECT count(*)  '
 			+ 'FROM ' + prefix + 'node '
-			+ 'JOIN ' + prefix + 'thread_post ON ' + prefix + 'thread_post.nodeid != ' + prefix + 'node.nodeid '
-			+ 'AND node.contenttypeid = 30 '
+			+ 'LEFT OUTER JOIN ' + prefix + 'thread_post ON ' + prefix + 'node.nodeid = ' + prefix + 'thread_post.nodeid '
+			+ 'WHERE thread_post.nodeid is NULL AND node.contenttypeid = 30 '
 			//+ 'AND ' + prefix + 'thread.firstpostid != ' + prefix + 'post.postid '
 			+ (timemachine.posts.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.posts.from : ' ')
 			+ (timemachine.posts.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.posts.to : ' ')
