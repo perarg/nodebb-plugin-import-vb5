@@ -744,7 +744,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		var startms = +new Date();
 		var query = 'SELECT '
 			+ prefix + 'node.nodeid as _pid, '
-			+ prefix + 'mitsos.threadid as _tid, '
+			+ prefix + 'thread_post.threadid as _tid, '
 			+ prefix + 'node.userid as _uid, '
 			//+ prefix + 'node.inlist as _visible, '
 			//+ prefix + 'node.authorname as _guest, '
@@ -755,8 +755,8 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'node.publishdate as _timestamp '
 			+ ' FROM ' + prefix + 'node '
 			+ ' INNER JOIN ' + prefix + 'text ON ' + prefix + 'node.nodeid = ' + prefix + 'text.nodeid '
-			+ ' LEFT OUTER JOIN ' + prefix + 'thread_post ON ' + prefix + 'node.nodeid = ' + prefix + 'thread_post.nodeid '
-			+ ' WHERE node.contenttypeid=30 '		
+			+ ' JOIN ' + prefix + 'thread_post ON ' + prefix + 'node.nodeid = ' + prefix + 'thread_post.nodeid '	
+			+ ' WHERE node.nodeid!= thread_post.nodeid AND node.contenttypeid=30 '		
 			//+ ' AND ' + prefix + 'thread.firstpostid != ' + prefix + 'post.postid '
 			+ (timemachine.posts.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.posts.from : ' ')
 			+ (timemachine.posts.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.posts.to : ' ')
