@@ -755,8 +755,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'node.publishdate as _timestamp '
 			+ ' FROM ' + prefix + 'node '
 			+ ' INNER JOIN ' + prefix + 'text ON ' + prefix + 'node.nodeid = ' + prefix + 'text.nodeid '
-			+ ' LEFT OUTER JOIN ' + prefix + 'thread_post ON ' + prefix + 'node.nodeid = ' + prefix + 'thread_post.nodeid, '
-			+ ' ( SELECT ' prefix + 'thread_post.threadid FROM ' + prefix + 'thread_post where ' + prefix + 'thread_post.nodeid = node.nodeid ) as mitsos '	
+			+ ' LEFT OUTER JOIN ' + prefix + 'thread_post ON ' + prefix + 'node.nodeid = ' + prefix + 'thread_post.nodeid '
 			+ ' WHERE node.contenttypeid=30 '		
 			//+ ' AND ' + prefix + 'thread.firstpostid != ' + prefix + 'post.postid '
 			+ (timemachine.posts.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.posts.from : ' ')
