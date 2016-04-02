@@ -754,7 +754,9 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'text.rawtext as _content, '
 			+ prefix + 'node.publishdate as _timestamp '
 			+ ' FROM ' + prefix + 'node '
-			+ ' JOIN ' + prefix + 'text ON ' + prefix + 'node.nodeid = ' + prefix + 'text.nodeid '
+			+ ' INNER JOIN ' + prefix + 'text ON ' + prefix + 'node.nodeid = ' + prefix + 'text.nodeid '
+			+ ' LEFT OUTER JOIN ' + prefix + 'thread_post ON ' + prefix + 'node.nodeid = ' + prefix + 'thread_post.nodeid '	
+			+ ' WHERE 1=1 '		
 			//+ ' AND ' + prefix + 'thread.firstpostid != ' + prefix + 'post.postid '
 			+ (timemachine.posts.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.posts.from : ' ')
 			+ (timemachine.posts.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.posts.to : ' ')
