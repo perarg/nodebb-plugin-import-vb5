@@ -655,11 +655,11 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'node.userid as _uid, '
 			+ prefix + 'thread_post.postid as _pid, '
 			+ prefix + 'node.parentid as _cid, '
-			//+ prefix + 'node.public_preview as _visible, '
+			+ prefix + 'node.public_preview as _visible, '
 			+ prefix + 'node.title as _title, '
 			+ prefix + 'text.rawtext as _content, '
-			//+ prefix + 'node.hasphoto as _attached, '
-			//+ prefix + 'node.authorname as _guest, '
+			+ prefix + 'node.hasphoto as _attached, '
+			+ prefix + 'node.authorname as _guest, '
 			+ prefix + 'node.ipaddress as _ip, '
 			+ prefix + 'node.publishdate as _timestamp, '
 			+ prefix + 'node.totalcount as _viewcount, '
@@ -721,7 +721,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		var query = 'SELECT count(*)  '
 			+ 'FROM ' + prefix + 'node '
 			+ 'LEFT OUTER JOIN ' + prefix + 'thread_post ON ' + prefix + 'node.nodeid = ' + prefix + 'thread_post.nodeid '
-			+ 'WHERE thread_post.nodeid is NULL AND node.contenttypeid = 30 '
+			+ 'WHERE ' + prefix + 'thread_post.nodeid is NULL AND ' + prefix + 'node.contenttypeid = 30 '
 			//+ 'AND ' + prefix + 'thread.firstpostid != ' + prefix + 'post.postid '
 			+ (timemachine.posts.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.posts.from : ' ')
 			+ (timemachine.posts.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.posts.to : ' ')
