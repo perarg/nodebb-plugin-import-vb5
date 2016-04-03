@@ -622,7 +622,9 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		var timemachine = Exporter.config('custom').timemachine;
 
 		var query = 'SELECT count(*) '
-			+ 'FROM ' + prefix + 'thread_post '
+			+ 'FROM ' + prefix + 'thread_post, '
+			+ prefix + 'node '
+			+ ' WHERE ' + prefix + 'thread_post.nodeid = ' + prefix + 'node.nodeid '
 			//+ 'JOIN ' + prefix + 'node ON ' + prefix + 'thread_post.nodeid=' + prefix + 'node.nodeid '
 			+ (timemachine.topics.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.topics.from : ' ')
 			+ (timemachine.topics.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.topics.to : ' ')
