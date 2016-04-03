@@ -490,7 +490,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'pmtext.dateline as _timestamp '
 			+ 'FROM ' + prefix + 'pm '
 			+ 'JOIN ' + prefix + 'pmtext ON ' + prefix + 'pmtext.pmtextid=' + prefix + 'pm.pmtextid '
-			//+ 'AND ' + prefix + 'pmtext.fromuserid != ' + prefix + 'pm.userid '
+			+ 'AND ' + prefix + 'pmtext.fromuserid != ' + prefix + 'pm.userid '
 			+ (timemachine.messages.from ? ' AND ' + prefix + 'pmtext.dateline >= ' + timemachine.messages.from : ' ')
 			+ (timemachine.messages.to ? ' AND  ' + prefix + 'pmtext.dateline <= ' + timemachine.messages.to : ' ')
 			+ (start >= 0 && limit >= 0 ? ' LIMIT ' + start + ',' + limit : '');
