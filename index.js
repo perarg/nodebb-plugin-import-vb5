@@ -623,7 +623,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 
 		var query = 'SELECT count(*) '
 			+ 'FROM ' + prefix + 'thread_post '
-			+ 'JOIN ' + prefix + 'node ON ' + prefix + 'thread_post.nodeid=' + prefix + 'node.nodeid '
+			//+ 'JOIN ' + prefix + 'node ON ' + prefix + 'thread_post.nodeid=' + prefix + 'node.nodeid '
 			+ (timemachine.topics.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.topics.from : ' ')
 			+ (timemachine.topics.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.topics.to : ' ')
 			+ '';
@@ -663,9 +663,13 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'node.totalcount as _viewcount, '
 			+ prefix + 'node.open as _open, '
 			+ prefix + 'node.sticky as _pinned '
-			+ ' FROM ' + prefix + 'thread_post '
-			+ ' JOIN ' + prefix + 'node ON ' + prefix + 'thread_post.nodeid=' + prefix + 'node.nodeid '
-			+ ' JOIN ' + prefix + 'text ON ' + prefix + 'text.nodeid=' + prefix + 'node.nodeid '
+			+ ' FROM ' + prefix + 'thread_post, '
+			+ prefix + 'node, '
+			+ prefix + 'text '
+			+ ' WHERE ' + prefix + 'thread_post.nodeid = ' + prefix + 'node.nodeid '
+			+ ' AND ' + prefix + 'node.nodeid = ' + prefix + 'text.nodeid '
+			//+ ' JOIN ' + prefix + 'node ON ' + prefix + 'thread_post.nodeid=' + prefix + 'node.nodeid '
+			//+ ' JOIN ' + prefix + 'text ON ' + prefix + 'text.nodeid=' + prefix + 'node.nodeid '
 			+ (timemachine.topics.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.topics.from : ' ')
 			+ (timemachine.topics.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.topics.to : ' ')
 
