@@ -574,7 +574,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			rows.forEach(function(row) {
 				// use both, the pid and the uid to make sure post and the user ids match, for some reason even with the contenttypeid filter, some attachments didn't belong
 				map[row._contentid + '_' + row._uid] = map[row._contentid + '_' + row._uid] || [];
-				map[row._contentid + '_' + row._uid].push({blob: row._blob, filename: row._fname});
+				map[row._contentid + '_' + row._uid].push({/*blob: row._blob*/extension: row._extension, filename: row._fname});
 			});
 
 			callback(err, map);
@@ -591,17 +591,19 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		}
 
 		var query = 'SELECT '
-			+ prefix + 'attachment.contentid as _contentid, '
+			+ prefix + 'distinct node.parentid as _contentid, '
 			+ prefix + 'attachment.userid as _uid, '
-			+ prefix + 'attachment.filename as _fname, '
-			+ prefix + 'filedata.filedata as _blob '
-			+ 'FROM ' + prefix + 'attachment '
-			+ 'JOIN ' + prefix + 'filedata ON ' + prefix + 'filedata.filedataid=' + prefix + 'attachment.filedataid '
-			+ 'WHERE ' + prefix + 'state="visible" '
-			+ 'AND ' + prefix + 'attachment.contenttypeid=' + contenttypeid + ' '
+			+ prefix + 'attachment.filedataid as _fname, '
+			+ prefix + 'filedata.extension as _extension '
+			//+ prefix + 'filedata.filedata as _blob '
+			+ 'FROM ' + prefix + 'attach '
+			+ 'JOIN ' + prefix + 'node ON ' + prefix + 'attach.nodeid = '+ prefix + 'node.nodeid '
+			+ 'JOIN ' + prefix + 'attachment ON ' + prefix + 'attach.filedataid = '+ prefix + 'attachment.filedataid '		
+			+ 'JOIN ' + prefix + 'filedata ON ' + prefix + 'attachment.filedataid = ' + prefix + 'filedata.filedataid '
+			+ 'WHERE ' + prefix + 'attachment.contenttypeid=' + contenttypeid ;
 			// checking for NULL is faster, so let it quit before checking the length, if NULL
-			+ 'AND ' + prefix + 'filedata.filedata IS NOT NULL '
-			+ 'AND LENGTH(' + prefix + 'filedata.filedata) > 0 ';
+			//+ 'AND ' + prefix + 'filedata.filedata IS NOT NULL '
+			//+ 'AND LENGTH(' + prefix + 'filedata.filedata) > 0 ';
 
 		Exporter.query(query,
 			function(err, rows) {
@@ -658,7 +660,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'node.public_preview as _visible, '
 			+ prefix + 'node.title as _title, '
 			+ prefix + 'text.rawtext as _content, '
-			+ prefix + 'node.hasphoto as _attached, '
+			//+ prefix + 'node.hasphoto as _attached, '
 			+ prefix + 'node.authorname as _guest, '
 			+ prefix + 'node.ipaddress as _ip, '
 			+ prefix + 'node.publishdate as _timestamp, '
@@ -699,9 +701,9 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 						delete row._visible;
 
 						row._attachmentsBlobs = attachmentsMap[row._pid + '_' + row._uid];
-						if (row._attachmentsBlobs && row._attached != row._attachmentsBlobs.length) {
+						/*if (row._attachmentsBlobs && row._attached != row._attachmentsBlobs.length) {
 							delete row._attachmentsBlobs;
-						}
+						}*/
 
 						map[row._tid] = row;
 					});
@@ -794,9 +796,9 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 
 						map[row._pid] = row;
 						row._attachmentsBlobs = attachmentsMap[row._pid + '_' + row._uid];
-						if (row._attachmentsBlobs && row._attached != row._attachmentsBlobs.length) {
+/*						if (row._attachmentsBlobs && row._attached != row._attachmentsBlobs.length) {
 							delete row._attachmentsBlobs;
-						}
+						}*/
 					});
 
 					callback(null, map, rows);
