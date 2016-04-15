@@ -881,11 +881,11 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 					next(err, arr);
 				});
 			},
-			function(next) {
+/*			function(next) {
 				Exporter.getPosts(function(err, map, arr) {
 					next(err, arr);
 				});
-			},
+			},*/
 			function(next) {
 				Exporter.teardown(next);
 			}
