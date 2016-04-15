@@ -570,11 +570,23 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		// per vb contenttype table
 		getAttachmentsMap(1, function (err, rows) {
 			var map = {};
-
+			var filePath = '';
+			var fileType = '';
 			rows.forEach(function(row) {
 				// use both, the pid and the uid to make sure post and the user ids match, for some reason even with the contenttypeid filter, some attachments didn't belong
 				map[row._contentid + '_' + row._uid] = map[row._contentid + '_' + row._uid] || [];
-				map[row._contentid + '_' + row._uid].push({/*blob: row._blob*/extension: row._extension, filename: row._fname});
+				filePath = __dirname +'/tmp/attachments/'+row._fname+'.'+row._extension;
+				if (row._extension === 'bmp' ||
+					row._extension === 'gif' ||
+					row._extension === 'jpg' ||
+					row._extension === 'jpeg' ||
+					row._extension === 'png' ||
+					)
+				{
+					fileType = 'image';
+				}
+				else { fileType = 'attachment'; }
+				map[row._contentid + '_' + row._uid].push({fileType: fileType, path: filePath});
 			});
 
 			callback(err, map);
@@ -591,7 +603,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		}
 
 		var query = 'SELECT '
-			+ prefix + 'distinct node.parentid as _contentid, '
+			+ prefix + 'node.parentid as _contentid, '
 			+ prefix + 'attachment.userid as _uid, '
 			+ prefix + 'attachment.filedataid as _fname, '
 			+ prefix + 'filedata.extension as _extension '
@@ -700,7 +712,14 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 						row._deleted = row._visible == 2 ? 1 : 0;
 						delete row._visible;
 
-						row._attachmentsBlobs = attachmentsMap[row._pid + '_' + row._uid];
+						if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'image')
+						{
+							row._images = attachmentsMap[row._pid + '_' + row._uid];
+						}else if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'attachment') {
+							row._attachments = attachmentsMap[row._pid + '_' + row._uid];
+						}
+
+						//row._attachmentsBlobs = attachmentsMap[row._pid + '_' + row._uid];
 						/*if (row._attachmentsBlobs && row._attached != row._attachmentsBlobs.length) {
 							delete row._attachmentsBlobs;
 						}*/
@@ -795,7 +814,15 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 						delete row._visible;
 
 						map[row._pid] = row;
-						row._attachmentsBlobs = attachmentsMap[row._pid + '_' + row._uid];
+						
+						if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'image')
+						{
+							row._images = attachmentsMap[row._pid + '_' + row._uid];
+						}else if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'attachment') {
+							row._attachments = attachmentsMap[row._pid + '_' + row._uid];
+						}
+
+						//row._attachmentsBlobs = attachmentsMap[row._pid + '_' + row._uid];
 /*						if (row._attachmentsBlobs && row._attached != row._attachmentsBlobs.length) {
 							delete row._attachmentsBlobs;
 						}*/
