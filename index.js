@@ -572,6 +572,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			var map = {};
 			var filePath = '';
 			var fileType = '';
+			console.log('LENGTH: ' + rows.length);
 			rows.forEach(function(row) {
 				// use both, the pid and the uid to make sure post and the user ids match, for some reason even with the contenttypeid filter, some attachments didn't belong
 				map[row._contentid + '_' + row._uid] = map[row._contentid + '_' + row._uid] || [];
@@ -712,12 +713,19 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 						row._deleted = row._visible == 2 ? 1 : 0;
 						delete row._visible;
 
+						row._images=[];
+						row._attachments=[];
+						
 						if (attachmentsMap[row._pid + '_' + row._uid]){
-							if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'image')
+							//console.log(JSON.stringify(attachmentsMap[row._pid + '_' + row._uid]) + '\n');
+							for(var ccc=0; ccc < attachmentsMap[row._pid + '_' + row._uid].length ; ccc++)
 							{
-								row._images = attachmentsMap[row._pid + '_' + row._uid];
-							}else if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'attachment') {
-								row._attachments = attachmentsMap[row._pid + '_' + row._uid];
+								if (attachmentsMap[row._pid + '_' + row._uid][ccc].fileType == "image")
+								{
+									row._images.push(attachmentsMap[row._pid + '_' + row._uid][ccc].path);
+								}else if (attachmentsMap[row._pid + '_' + row._uid][ccc].fileType == "attachment") {
+									row._attachments.push(attachmentsMap[row._pid + '_' + row._uid][ccc].path);
+								}
 							}
 						}
 
@@ -816,13 +824,19 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 						delete row._visible;
 
 						map[row._pid] = row;
+						row._images=[];
+						row._attachments=[];
 						
 						if (attachmentsMap[row._pid + '_' + row._uid]){
-							if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'image')
+							//console.log(JSON.stringify(attachmentsMap[row._pid + '_' + row._uid]) + '\n');
+							for(var ccc=0; ccc < attachmentsMap[row._pid + '_' + row._uid].length ; ccc++)
 							{
-								row._images = attachmentsMap[row._pid + '_' + row._uid];
-							}else if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'attachment') {
-								row._attachments = attachmentsMap[row._pid + '_' + row._uid];
+								if (attachmentsMap[row._pid + '_' + row._uid][ccc].fileType == "image")
+								{
+									row._images.push(attachmentsMap[row._pid + '_' + row._uid][ccc].path);
+								}else if (attachmentsMap[row._pid + '_' + row._uid][ccc].fileType == "attachment") {
+									row._attachments.push(attachmentsMap[row._pid + '_' + row._uid][ccc].path);
+								}
 							}
 						}
 
