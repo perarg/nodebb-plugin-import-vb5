@@ -673,6 +673,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'node.public_preview as _visible, '
 			+ prefix + 'node.title as _title, '
 			+ prefix + 'text.rawtext as _content, '
+			+ prefix + 'thread_post.nodeid as _nodeid, '
 			//+ prefix + 'node.hasphoto as _attached, '
 			+ prefix + 'node.authorname as _guest, '
 			+ prefix + 'node.ipaddress as _ip, '
@@ -716,15 +717,15 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 						row._images=[];
 						row._attachments=[];
 						
-						if (attachmentsMap[row._pid + '_' + row._uid]){
+						if (attachmentsMap[row._nodeid + '_' + row._uid]){
 							//console.log(JSON.stringify(attachmentsMap[row._pid + '_' + row._uid]) + '\n');
-							for(var ccc=0; ccc < attachmentsMap[row._pid + '_' + row._uid].length ; ccc++)
+							for(var ccc=0; ccc < attachmentsMap[row._nodeid + '_' + row._uid].length ; ccc++)
 							{
-								if (attachmentsMap[row._pid + '_' + row._uid][ccc].fileType == "image")
+								if (attachmentsMap[row._nodeid + '_' + row._uid][ccc].fileType == "image")
 								{
-									row._images.push(attachmentsMap[row._pid + '_' + row._uid][ccc].path);
-								}else if (attachmentsMap[row._pid + '_' + row._uid][ccc].fileType == "attachment") {
-									row._attachments.push(attachmentsMap[row._pid + '_' + row._uid][ccc].path);
+									row._images.push(attachmentsMap[row._nodeid + '_' + row._uid][ccc].path);
+								}else if (attachmentsMap[row._nodeid + '_' + row._uid][ccc].fileType == "attachment") {
+									row._attachments.push(attachmentsMap[row._nodeid + '_' + row._uid][ccc].path);
 								}
 							}
 						}
