@@ -712,11 +712,13 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 						row._deleted = row._visible == 2 ? 1 : 0;
 						delete row._visible;
 
-						if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'image')
-						{
-							row._images = attachmentsMap[row._pid + '_' + row._uid];
-						}else if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'attachment') {
-							row._attachments = attachmentsMap[row._pid + '_' + row._uid];
+						if (attachmentsMap[row._pid + '_' + row._uid]){
+							if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'image')
+							{
+								row._images = attachmentsMap[row._pid + '_' + row._uid];
+							}else if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'attachment') {
+								row._attachments = attachmentsMap[row._pid + '_' + row._uid];
+							}
 						}
 
 						//row._attachmentsBlobs = attachmentsMap[row._pid + '_' + row._uid];
@@ -815,11 +817,13 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 
 						map[row._pid] = row;
 						
-						if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'image')
-						{
-							row._images = attachmentsMap[row._pid + '_' + row._uid];
-						}else if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'attachment') {
-							row._attachments = attachmentsMap[row._pid + '_' + row._uid];
+						if (attachmentsMap[row._pid + '_' + row._uid]){
+							if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'image')
+							{
+								row._images = attachmentsMap[row._pid + '_' + row._uid];
+							}else if (attachmentsMap[row._pid + '_' + row._uid].fileType === 'attachment') {
+								row._attachments = attachmentsMap[row._pid + '_' + row._uid];
+							}
 						}
 
 						//row._attachmentsBlobs = attachmentsMap[row._pid + '_' + row._uid];
