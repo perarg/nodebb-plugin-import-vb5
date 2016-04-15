@@ -580,7 +580,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 					row._extension === 'gif' ||
 					row._extension === 'jpg' ||
 					row._extension === 'jpeg' ||
-					row._extension === 'png' ||
+					row._extension === 'png'
 					)
 				{
 					fileType = 'image';
