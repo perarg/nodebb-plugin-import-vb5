@@ -14,13 +14,7 @@ require('./index').testrun({
 	console.log("getMessages", Object.keys(results[3]).length);
 	console.log("getCategories", Object.keys(results[4]).length);
 	console.log("getTopics", Object.keys(results[5]).length);
-//	console.log("getPosts", Object.keys(results[6]).length);
-
-/*	(results[5] || []).forEach(function(result) {
-		(result._images || []).forEach(function(image){
-			console.log(image + '\n');
-		});
-	});*/
+	console.log("getPosts", Object.keys(results[6]).length);
 
 	// will crash the process if there are attachmentBlobs
 	fs.writeFileSync('./tmp.json', JSON.stringify(results[5][16374], undefined, 2));

@@ -446,12 +446,8 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		var timemachine = Exporter.config('custom').timemachine;
 
 		var query = 'SELECT count(*) '
-			+ 'FROM ' + prefix + 'pm '
-			+ 'JOIN ' + prefix + 'pmtext ON ' + prefix + 'pmtext.pmtextid=' + prefix + 'pm.pmtextid '
-			+ 'JOIN ' + prefix + 'user ON ' + prefix + 'pmtext.fromuserid=' + prefix + 'user.userid '
-			+ 'WHERE ' + prefix + 'pmtext.fromuserid != ' + prefix + 'pm.userid '
-			+ 'AND EXISTS ( SELECT * FROM ' + prefix + 'user WHERE ' + prefix + 'user.userid = ' + prefix + 'pm.userid) '
-			+ 'AND ' + prefix + 'pmtext.fromuserid != ' + prefix + 'pm.userid '
+			+ 'FROM ' + prefix + 'node '
+			+ 'WHERE ' + prefix + 'node.contenttypeid = 15 '
 			+ (timemachine.messages.from ? ' AND ' + prefix + 'pmtext.dateline >= ' + timemachine.messages.from : ' ')
 			+ (timemachine.messages.to ? ' AND  ' + prefix + 'pmtext.dateline <= ' + timemachine.messages.to : ' ')
 			+ '';
@@ -486,18 +482,17 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		var timemachine = Exporter.config('custom').timemachine;
 
 		var query = 'SELECT '
-			+ prefix + 'pm.pmid as _mid, '
-			+ prefix + 'pmtext.fromuserid as _fromuid, '
-			+ prefix + 'pm.userid as _touid, '
-			+ prefix + 'pmtext.message as _content, '
-			+ prefix + 'pmtext.dateline as _timestamp '
-			+ 'FROM ' + prefix + 'pm '
-			+ 'JOIN ' + prefix + 'pmtext ON ' + prefix + 'pmtext.pmtextid=' + prefix + 'pm.pmtextid '
-			+ 'JOIN ' + prefix + 'user ON ' + prefix + 'pmtext.fromuserid=' + prefix + 'user.userid '
-			+ 'WHERE ' + prefix + 'pmtext.fromuserid != ' + prefix + 'pm.userid '
-			+ 'AND EXISTS ( SELECT * FROM ' + prefix + 'user WHERE ' + prefix + 'user.userid = ' + prefix + 'pm.userid) '
-			+ (timemachine.messages.from ? ' AND ' + prefix + 'pmtext.dateline >= ' + timemachine.messages.from : ' ')
-			+ (timemachine.messages.to ? ' AND  ' + prefix + 'pmtext.dateline <= ' + timemachine.messages.to : ' ')
+			+ prefix + 'node.nodeid as _mid, '
+			+ prefix + 'node.userid as _fromuid, '
+			+ prefix + 'node.lastauthorid as _touid, '
+			+ prefix + 'text.rawtext as _content, '
+			+ prefix + 'node.publishdate as _timestamp '
+			+ 'FROM ' + prefix + 'node, '
+			+ prefix + 'text '
+			+ 'WHERE ' + prefix + 'node.nodeid = ' + prefix + 'text.nodeid '
+			+ 'AND ' + prefix + 'node.contenttypeid = 15 '
+			+ (timemachine.messages.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.messages.from : ' ')
+			+ (timemachine.messages.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.messages.to : ' ')
 			+ (start >= 0 && limit >= 0 ? ' LIMIT ' + start + ',' + limit : '');
 
 		Exporter.query(query,
@@ -548,7 +543,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'node.description as _description, '
 			+ prefix + 'node.displayorder as _order '
 			+ 'FROM ' + prefix + 'node '
-			+ 'where node.contenttypeid=29 '
+			+ 'WHERE ' + prefix + 'node.contenttypeid = 29 '
 			+ (start >= 0 && limit >= 0 ? ' LIMIT ' + start + ',' + limit : '');
 
 		Exporter.query(query,
@@ -642,10 +637,10 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		var timemachine = Exporter.config('custom').timemachine;
 
 		var query = 'SELECT count(*) '
-			+ 'FROM ' + prefix + 'thread_post, '
-			+ prefix + 'node '
-			+ ' WHERE ' + prefix + 'thread_post.nodeid = ' + prefix + 'node.nodeid '
-			//+ 'JOIN ' + prefix + 'node ON ' + prefix + 'thread_post.nodeid=' + prefix + 'node.nodeid '
+			+ 'FROM ' + prefix + 'node '
+			+ ' WHERE ' + prefix + 'node.title != \'\' '
+			+ ' AND ' + prefix + 'node.title IS NOT NULL '
+			+ ' AND ' + prefix + 'node.contenttypeid = 30 '
 			+ (timemachine.topics.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.topics.from : ' ')
 			+ (timemachine.topics.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.topics.to : ' ')
 			+ '';
@@ -671,26 +666,26 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 
 		var startms = +new Date();
 		var query = 'SELECT '
-			+ prefix + 'thread_post.threadid as _tid, '
+			+ prefix + 'node.nodeid as _tid, '
 			+ prefix + 'node.userid as _uid, '
-			+ prefix + 'thread_post.postid as _pid, '
+//			+ prefix + 'thread_post.postid as _pid, '
 			+ prefix + 'node.parentid as _cid, '
-			+ prefix + 'node.public_preview as _visible, '
+//			+ prefix + 'node.public_preview as _visible, '
 			+ prefix + 'node.title as _title, '
 			+ prefix + 'text.rawtext as _content, '
-			+ prefix + 'thread_post.nodeid as _nodeid, '
+//			+ prefix + 'thread_post.nodeid as _nodeid, '
 			//+ prefix + 'node.hasphoto as _attached, '
-			+ prefix + 'node.authorname as _guest, '
+//			+ prefix + 'node.authorname as _guest, '
 			+ prefix + 'node.ipaddress as _ip, '
 			+ prefix + 'node.publishdate as _timestamp, '
 			+ prefix + 'node.totalcount as _viewcount, '
 			+ prefix + 'node.open as _open, '
 			+ prefix + 'node.sticky as _pinned '
-			+ ' FROM ' + prefix + 'thread_post, '
-			+ prefix + 'node, '
+			+ ' FROM ' + prefix + 'node, '
 			+ prefix + 'text '
-			+ ' WHERE ' + prefix + 'thread_post.nodeid = ' + prefix + 'node.nodeid '
-			+ ' AND ' + prefix + 'node.nodeid = ' + prefix + 'text.nodeid '
+			+ ' WHERE ' + prefix + 'node.nodeid = ' + prefix + 'text.nodeid '
+			+ ' AND ' + prefix + 'node.title != \'\' '
+			+ ' AND ' + prefix + 'node.contenttypeid = 30 '
 			//+ ' JOIN ' + prefix + 'node ON ' + prefix + 'thread_post.nodeid=' + prefix + 'node.nodeid '
 			//+ ' JOIN ' + prefix + 'text ON ' + prefix + 'text.nodeid=' + prefix + 'node.nodeid '
 			+ (timemachine.topics.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.topics.from : ' ')
@@ -722,15 +717,15 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 						row._images=[];
 						row._attachments=[];
 						
-						if (attachmentsMap[row._nodeid + '_' + row._uid]){
+						if (attachmentsMap[row._cid + '_' + row._uid]){
 							//console.log(JSON.stringify(attachmentsMap[row._pid + '_' + row._uid]) + '\n');
-							for(var ccc=0; ccc < attachmentsMap[row._nodeid + '_' + row._uid].length ; ccc++)
+							for(var ccc=0; ccc < attachmentsMap[row._cid + '_' + row._uid].length ; ccc++)
 							{
-								if (attachmentsMap[row._nodeid + '_' + row._uid][ccc].fileType == "image")
+								if (attachmentsMap[row._cid + '_' + row._uid][ccc].fileType == "image")
 								{
-									row._images.push(attachmentsMap[row._nodeid + '_' + row._uid][ccc].path);
-								}else if (attachmentsMap[row._nodeid + '_' + row._uid][ccc].fileType == "attachment") {
-									row._attachments.push(attachmentsMap[row._nodeid + '_' + row._uid][ccc].path);
+									row._images.push(attachmentsMap[row._cid + '_' + row._uid][ccc].path);
+								}else if (attachmentsMap[row._cid + '_' + row._uid][ccc].fileType == "attachment") {
+									row._attachments.push(attachmentsMap[row._cid + '_' + row._uid][ccc].path);
 								}
 							}
 						}
@@ -757,8 +752,8 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 
 		var query = 'SELECT count(*)  '
 			+ 'FROM ' + prefix + 'node '
-			+ 'LEFT OUTER JOIN ' + prefix + 'thread_post ON ' + prefix + 'node.nodeid = ' + prefix + 'thread_post.nodeid '
-			+ ' AND ' + prefix + 'node.contenttypeid = 30 '
+			+ 'WHERE ' + prefix + 'node.title == \'\' '
+			+ 'AND ' + prefix + 'node.contenttypeid = 30 '
 			+ (timemachine.posts.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.posts.from : ' ')
 			+ (timemachine.posts.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.posts.to : ' ')
 			+ '';
@@ -786,20 +781,19 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		var startms = +new Date();
 		var query = 'SELECT '
 			+ prefix + 'node.nodeid as _pid, '
-			+ prefix + 'thread_post.threadid as _tid, '
+			+ prefix + 'node.parentid as _tid, '
 			+ prefix + 'node.userid as _uid, '
 			//+ prefix + 'node.inlist as _visible, '
 			//+ prefix + 'node.authorname as _guest, '
 			//+ prefix + 'text.attach as _attached, '
 			+ prefix + 'node.ipaddress as _ip, '
-			+ prefix + 'node.parentid as _toPid, '
+			//+ prefix + 'node.parentid as _toPid, '
 			+ prefix + 'text.rawtext as _content, '
 			+ prefix + 'node.publishdate as _timestamp '
 			+ ' FROM ' + prefix + 'node, '
-			+ prefix + 'thread_post, '
 			+ prefix + 'text '
-			+ ' WHERE ' + prefix + 'node.parentid = ' + prefix + 'thread_post.nodeid '
-			+ ' AND '+ prefix + 'node.nodeid = '+ prefix + ' text.nodeid '
+			+ ' WHERE ' + prefix + 'node.nodeid = '+ prefix + ' text.nodeid '
+			+ ' AND '+ prefix + 'node.title = \'\' '
 			+ ' AND '+ prefix + 'node.contenttypeid=30 '
 			+ (timemachine.posts.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.posts.from : ' ')
 			+ (timemachine.posts.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.posts.to : ' ')
@@ -887,11 +881,11 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 					next(err, arr);
 				});
 			},
-/*			function(next) {
+			function(next) {
 				Exporter.getPosts(function(err, map, arr) {
 					next(err, arr);
 				});
-			},*/
+			},
 			function(next) {
 				Exporter.teardown(next);
 			}
