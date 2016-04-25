@@ -450,6 +450,8 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ 'WHERE ' + prefix + 'node.contenttypeid = 15 '
 			+ 'AND ' + prefix + 'node.userid > 0 '
 			+ 'AND ' + prefix + 'node.lastauthorid > 0 '
+			+ 'AND EXISTS ( SELECT * FROM ' + prefix + 'user WHERE ' + prefix + 'user.userid = ' + prefix + 'node.userid) '
+			+ 'AND EXISTS ( SELECT * FROM ' + prefix + 'user WHERE ' + prefix + 'user.userid = ' + prefix + 'node.lastauthorid) '
 			+ (timemachine.messages.from ? ' AND ' + prefix + 'pmtext.dateline >= ' + timemachine.messages.from : ' ')
 			+ (timemachine.messages.to ? ' AND  ' + prefix + 'pmtext.dateline <= ' + timemachine.messages.to : ' ')
 			+ '';
@@ -495,6 +497,8 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ 'AND ' + prefix + 'node.contenttypeid = 15 '
 			+ 'AND ' + prefix + 'node.userid > 0 '
 			+ 'AND ' + prefix + 'node.lastauthorid > 0 '
+			+ 'AND EXISTS ( SELECT * FROM ' + prefix + 'user WHERE ' + prefix + 'user.userid = ' + prefix + 'node.userid) '
+			+ 'AND EXISTS ( SELECT * FROM ' + prefix + 'user WHERE ' + prefix + 'user.userid = ' + prefix + 'node.lastauthorid) '			
 			+ (timemachine.messages.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.messages.from : ' ')
 			+ (timemachine.messages.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.messages.to : ' ')
 			+ (start >= 0 && limit >= 0 ? ' LIMIT ' + start + ',' + limit : '');
