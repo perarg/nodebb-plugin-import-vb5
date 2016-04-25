@@ -448,6 +448,8 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		var query = 'SELECT count(*) '
 			+ 'FROM ' + prefix + 'node '
 			+ 'WHERE ' + prefix + 'node.contenttypeid = 15 '
+			+ 'AND ' + prefix + 'node.userid > 0 '
+			+ 'AND ' + prefix + 'node.lastauthorid > 0 '
 			+ (timemachine.messages.from ? ' AND ' + prefix + 'pmtext.dateline >= ' + timemachine.messages.from : ' ')
 			+ (timemachine.messages.to ? ' AND  ' + prefix + 'pmtext.dateline <= ' + timemachine.messages.to : ' ')
 			+ '';
@@ -491,6 +493,8 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ prefix + 'text '
 			+ 'WHERE ' + prefix + 'node.nodeid = ' + prefix + 'text.nodeid '
 			+ 'AND ' + prefix + 'node.contenttypeid = 15 '
+			+ 'AND ' + prefix + 'node.userid > 0 '
+			+ 'AND ' + prefix + 'node.lastauthorid > 0 '
 			+ (timemachine.messages.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.messages.from : ' ')
 			+ (timemachine.messages.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.messages.to : ' ')
 			+ (start >= 0 && limit >= 0 ? ' LIMIT ' + start + ',' + limit : '');
