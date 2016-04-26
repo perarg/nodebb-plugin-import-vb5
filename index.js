@@ -647,8 +647,8 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 		var query = 'SELECT count(*) '
 			+ 'FROM ' + prefix + 'node '
 			+ ' WHERE ' + prefix + 'node.title != \'\' '
-			+ ' AND ' + prefix + 'node.title IS NOT NULL '
 			+ ' AND ' + prefix + 'node.contenttypeid = 30 '
+			+ ' AND EXISTS (SELECT * FROM ' + prefix + 'node as nnn WHERE ' + prefix +'node.parentid = nnn.nodeid AND nnn.contenttypeid=29) '
 			+ (timemachine.topics.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.topics.from : ' ')
 			+ (timemachine.topics.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.topics.to : ' ')
 			+ '';
@@ -694,6 +694,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ ' WHERE ' + prefix + 'node.nodeid = ' + prefix + 'text.nodeid '
 			+ ' AND ' + prefix + 'node.title != \'\' '
 			+ ' AND ' + prefix + 'node.contenttypeid = 30 '
+			+ ' AND EXISTS (SELECT * FROM ' + prefix + 'node as nnn WHERE ' + prefix +'node.parentid = nnn.nodeid AND nnn.contenttypeid=29) '
 			//+ ' JOIN ' + prefix + 'node ON ' + prefix + 'thread_post.nodeid=' + prefix + 'node.nodeid '
 			//+ ' JOIN ' + prefix + 'text ON ' + prefix + 'text.nodeid=' + prefix + 'node.nodeid '
 			+ (timemachine.topics.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.topics.from : ' ')
@@ -760,8 +761,9 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 
 		var query = 'SELECT count(*)  '
 			+ 'FROM ' + prefix + 'node '
-			+ 'WHERE ' + prefix + 'node.title == \'\' '
+			+ 'WHERE ' + prefix + 'node.title = \'\' '
 			+ 'AND ' + prefix + 'node.contenttypeid = 30 '
+			+ 'AND EXISTS (SELECT * FROM ' + prefix + 'node as nnn WHERE ' + prefix +'node.parentid = nnn.nodeid AND nnn.contenttypeid=30) '
 			+ (timemachine.posts.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.posts.from : ' ')
 			+ (timemachine.posts.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.posts.to : ' ')
 			+ '';
@@ -803,6 +805,7 @@ var logPrefix = '[nodebb-plugin-import-vb5]';
 			+ ' WHERE ' + prefix + 'node.nodeid = '+ prefix + ' text.nodeid '
 			+ ' AND '+ prefix + 'node.title = \'\' '
 			+ ' AND '+ prefix + 'node.contenttypeid=30 '
+			+ 'AND EXISTS (SELECT * FROM ' + prefix + 'node as nnn WHERE ' + prefix +'node.parentid = nnn.nodeid AND nnn.contenttypeid=30) '
 			+ (timemachine.posts.from ? ' AND ' + prefix + 'node.publishdate >= ' + timemachine.posts.from : ' ')
 			+ (timemachine.posts.to ? ' AND  ' + prefix + 'node.publishdate <= ' + timemachine.posts.to : ' ')
 			+ ' ORDER BY ' + prefix + 'node.publishdate ASC '
